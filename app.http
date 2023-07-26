@@ -1,0 +1,25 @@
+POST http://localhost:3000/register
+Content-Type: application/json
+
+{
+  "username": "joh33444n",
+  "name": "Johnweeeeeerteerty Doe",
+  "password": "sec3ureer",
+  "gender": "Matyu",
+  "location": "New rYeeeeeeeeetyuor2k, UrSA"
+}
+
+###
+
+POST http://localhost:3000/login
+Content-Type: application/json
+
+{
+  "username": "joh33444n",
+  "password": "sec3ureer"
+}
+
+###
+
+GET http://localhost:3000/profile
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImpvaDMzNDQ0biIsImlhdCI6MTY5MDM3MzQ5MX0.VWmaJeLBk65jAyk9EyPkt8yDKe_n_R4CgG2CVfEfIic
