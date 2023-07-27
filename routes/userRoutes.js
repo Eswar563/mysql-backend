@@ -7,6 +7,8 @@ const authenticationToken = require('../middlewares/middlewares')
 router.post("/register", userController.createUser);
 router.post("/login", userController.loginUser);
 router.get("/profile", authenticationToken.authenticateToken, userController.profile);
+router.put("/updateprofile/:id/",authenticationToken.authenticateToken, userController.updateProfile);
+
 
 
 

@@ -1,12 +1,14 @@
 const express = require("express");
-const db = require("./db"); // Import the separate db configuration
+const db = require("./db"); 
 const app = express();
 const cors = require("cors")
 app.use(cors())
 const userRoutes = require("./routes/userRoutes");
+const adminRoutes = require("./routes/adminRoutes");
+
 
 app.use(express.json());
-app.use("/", userRoutes);
+app.use("/", userRoutes, adminRoutes);
 
 const initializeDBAndServer = () => {
   db.connect((err) => {

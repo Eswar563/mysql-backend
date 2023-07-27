@@ -3,13 +3,14 @@ const jwt = require("jsonwebtoken")
 
 const db = require("../db");
 const express = require("express");
-
 const app = express();
 const jsonMiddleware = express.json();
 app.use(jsonMiddleware);
 
+//createUser
 exports.createUser = async (request, response) => {
   const { username, name, password, gender, location } = request.body;
+
   const hashedPassword = await bcrypt.hash(password, 10);
 
   const selectUserQuery = `SELECT * FROM user WHERE username = ?`;
@@ -39,7 +40,7 @@ exports.createUser = async (request, response) => {
   });
 };
 
-
+//loginUser
 exports.loginUser = async (request, response) => {
     const { username, password } = request.body;
     const selectUserQuery = `SELECT * FROM user WHERE username = ?`;
@@ -70,7 +71,7 @@ exports.loginUser = async (request, response) => {
   };
 
 
-
+  //profile
   exports.profile = async (request, response) => {
     try {
       const { username } = request;
@@ -95,6 +96,42 @@ exports.loginUser = async (request, response) => {
     }
   };
   
-  
+  exports.updateProfile = async (request, response) => {
+    const { id } = request.params;
+    const userDetails = request.body;
 
+    const {
+      username,
+      name,
+      password,
+      gender,
+      location,
+    } = userDetails;
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const updateUserQuery = `
+      UPDATE user
+      SET
+        username = ?,
+        name = ?,
+        password = ?,
+        gender = ?,
+        location = ?
+      WHERE
+        id = ?;`;
+  
+    const values = [username, name, hashedPassword, gender, location, id];
+  
+    db.query(updateUserQuery, values, (error, results) => {
+      if (error) {
+        console.error('Error updating user in MySQL:', error);
+        return response.status(500).json({ message: 'Error updating user' });
+      }
+  
+      if (results.affectedRows === 0) {
+        return response.status(404).json({ message: 'User not found' });
+      }
+  
+      response.send("User Updated Successfully");
+    });
+  };
   
