@@ -2,8 +2,8 @@ POST http://localhost:3000/register
 Content-Type: application/json
 
 {
-  "full_name": "eswar",
-  "email_address": "eswarvinayvenaktesh26@gmail.com",
+  "full_name": "es3war",
+  "email_address": "eswarveinayvenaktesh26@gmail.com",
   "password": "mysecretpassword",
   "address": "123 Main Street, Cityville, State",
   "phone_number": "555-123-4567",
