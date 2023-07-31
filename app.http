@@ -2,11 +2,12 @@ POST http://localhost:3000/register
 Content-Type: application/json
 
 {
-  "username": "venkatewsh123",
-  "name": "Johnweeeeeerteerty Doe",
-  "password": "venkatesh123",
-  "gender": "Matyu",
-  "location": "New rYeeeeeeeeetyuor2k, UrSA"
+  "username": "eswar123",
+  "email": "eswarvinayvenkatesh26@gmail.com",
+  "name": "eswar",
+  "password": "eswar365",
+  "gender": "Male",
+  "location": "Bengaluru"
 }
 
 ###
