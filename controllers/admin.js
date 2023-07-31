@@ -13,7 +13,7 @@ app.use(jsonMiddleware);
       SELECT
         *
       FROM
-        user
+        users
       ORDER BY
         id;`;
   
@@ -34,7 +34,7 @@ app.use(jsonMiddleware);
       SELECT
         *
       FROM
-        user
+        users
       WHERE
         id = ?;`;
   
@@ -59,7 +59,7 @@ app.use(jsonMiddleware);
     const { id } = request.params;
     const deleteUserQuery = `
       DELETE FROM
-        user
+        users
       WHERE
         id = ?;`; 
   
@@ -150,7 +150,7 @@ app.use(jsonMiddleware);
 //deleteAllUsers
 exports.deleteAllUsers = async (request, response) => {
   const deleteAllUsersQuery = `
-    DELETE FROM user;`;
+    DELETE FROM users;`;
 
   db.query(deleteAllUsersQuery, (error, results) => {
     if (error) {

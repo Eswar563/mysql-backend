@@ -1,0 +1,40 @@
+<html>
+<head>
+  <style>
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animated-text {
+      animation: fadeInUp 1s ease;
+      color: #007bff; /* Replace with your desired text color */
+      position: relative; /* Required for the ::after pseudo-element to position properly */
+      display: inline-block; /* Ensure ::after pseudo-element takes the size of the text */
+    }
+
+    .animated-text:hover::after {
+      content: "";
+      position: absolute;
+      top: -5px;
+      left: -5px;
+      right: -5px;
+      bottom: -5px;
+      border-radius: 5px;
+      background-color: rgba(0, 123, 255, 0.4); /* Replace with your desired glow color and opacity */
+      pointer-events: none; /* Ensures that the pseudo-element doesn't interfere with hover effect */
+    }
+  </style>
+</head>
+<body>
+  <h2 class="animated-text">Hello {{full_name}},</h2>
+  <p class="animated-text">Thank you for joining our website! Your username is: <strong>{{phone_number}}</strong></p>
+  <p class="animated-text">Regards,<br>Your Website Team</p>
+</body>
+</html>

@@ -2,13 +2,14 @@ POST http://localhost:3000/register
 Content-Type: application/json
 
 {
-  "username": "eswar123",
-  "email": "eswarvinayvenkatesh26@gmail.com",
-  "name": "eswar",
-  "password": "eswar365",
-  "gender": "Male",
-  "location": "Bengaluru"
+  "full_name": "eswar",
+  "email_address": "eswarvinayvenaktesh26@gmail.com",
+  "password": "mysecretpassword",
+  "address": "123 Main Street, Cityville, State",
+  "phone_number": "555-123-4567",
+  "gender": "Male"
 }
+
 
 ###
 
@@ -16,14 +17,14 @@ POST http://localhost:3000/login
 Content-Type: application/json
 
 {
-  "username": "venkatesh123",
-  "password": "venkatesh123"
+  "email_address": "eswarvinayvenaktesh26@gmail.com",
+  "password": "mysecretpassword"
 }
 
 ###
 
 GET http://localhost:3000/profile
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InZlbmthdGVzaDEyMyIsImlhdCI6MTY5MDQ1OTkzNn0.paSWtgc96ylbqzSgAMEkKHqZA72YxeQMM9BysBGaAmY
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbF9hZGRyZXNzIjoiZXN3YXJ2aW5heXZlbmFrdGVzaDI2QGdtYWlsLmNvbSIsImlhdCI6MTY5MDgwNjkzOH0.65L_d0fMkn8NJtcmd4sU2QYy_q8eBryj8ioCcPIFwkA
 
 ###
 
@@ -48,7 +49,7 @@ Content-Type: application/json
 GET http://localhost:3000/users
 
 ###
-GET http://localhost:3000/user/46/
+GET http://localhost:3000/user/20/
 
 ###
 DELETE http://localhost:3000/deleteuser/28/

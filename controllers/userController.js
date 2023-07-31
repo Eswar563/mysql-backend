@@ -7,27 +7,29 @@ const app = express();
 const jsonMiddleware = express.json();
 app.use(jsonMiddleware);
 const nodemailer = require("nodemailer");
-
+const fs = require('fs');
+const { v4: uuidv4 } = require('uuid');
 //createUser
 exports.createUser = async (request, response) => {
-  const { username, email, name, password, gender, location } = request.body;
+  const { full_name, email_address, password, address,  phone_number, gender } = request.body;
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  const selectUserQuery = `SELECT * FROM user WHERE username = ?`;
-  db.query(selectUserQuery, [username], async (err, rows) => {
+  const selectUserQuery = `SELECT * FROM users WHERE full_name = ?`;
+  db.query(selectUserQuery, [full_name], async (err, rows) => {
     if (err) {
       console.error("DB Error:", err.message);
       return response.status(500).send("Database error");
     }
 
     if (rows.length === 0) {
+      const user_id = uuidv4();
       const createUserQuery = `
         INSERT INTO 
-          user (username, email, name, password, gender, location) 
+          users (user_id, full_name, email_address, password, address,  phone_number, gender) 
         VALUES 
-          (?, ?, ?, ?, ?, ?)`;
-      db.query(createUserQuery, [username, email, name, hashedPassword, gender, location], (err, result) => {
+          (?, ?, ?, ?, ?, ?, ?)`;
+      db.query(createUserQuery, [user_id, full_name, email_address, hashedPassword, address,  phone_number, gender], (err, result) => {
         if (err) {
           console.error("DB Error:", err.message);
           return response.status(500).send("Database error");
@@ -42,63 +44,33 @@ exports.createUser = async (request, response) => {
           },
         });
         
-        const emailContent = `
-        <html>
-        <head>
-          <style>
-            @keyframes fadeInUp {
-              from {
-                opacity: 0;
-                transform: translateY(20px);
-              }
-              to {
-                opacity: 1;
-                transform: translateY(0);
-              }
-            }
-
-            .animated-text {
-              animation: fadeInUp 1s ease;
-              color: #007bff; /* Replace with your desired text color */
-              position: relative; /* Required for the ::after pseudo-element to position properly */
-              display: inline-block; /* Ensure ::after pseudo-element takes the size of the text */
-            }
-
-            .animated-text:hover::after {
-              content: "";
-              position: absolute;
-              top: -5px;
-              left: -5px;
-              right: -5px;
-              bottom: -5px;
-              border-radius: 5px;
-              background-color: rgba(0, 123, 255, 0.4); /* Replace with your desired glow color and opacity */
-              pointer-events: none; /* Ensures that the pseudo-element doesn't interfere with hover effect */
-            }
-          </style>
-        </head>
-        <body>
-          <h2 class="animated-text">Hello ${name},</h2>
-          <p class="animated-text">Thank you for joining our website! Your username is: <strong>${username}</strong></p>
-          <p class="animated-text">Regards,<br>Your Website Team</p>
-        </body>
-      </html>
-      `;
-        const mailOptions = {
-          from: "evv.pedagadi365@gmail.com", 
-          to: email, 
-          subject: "Welcome to Our Website",
-          html:emailContent
-        };
-
-        transporter.sendMail(mailOptions, (error, info) => {
-          if (error) {
-            console.error("Email Error:", error.message);
-            return response.status(500).send("Error sending email");
+        fs.readFile('emailTemplate.html', 'utf8', (err, emailTemplate) => {
+          if (err) {
+            console.error("Error reading email template:", err.message);
+            return response.status(500).send("Error reading email template");
           }
-          console.log("Email sent:", info.response);
-          const newUserId = result.insertId;
-          response.send(`Created new user with ${newUserId}`);
+
+          // Replace placeholders with actual data
+          const emailContent = emailTemplate
+            .replace('{{full_name}}', full_name)
+            .replace('{{phone_number}}', phone_number);
+
+          const mailOptions = {
+            from: "evv.pedagadi365@gmail.com",
+            to: email_address,
+            subject: "Welcome to Our Website",
+            html: emailContent,
+          };
+
+          transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+              console.error("Email Error:", error.message);
+              return response.status(500).send("Error sending email");
+            }
+            console.log("Email sent:", info.response);
+            const newUserId = result.insertId;
+            response.send(`Created new user with ${newUserId}`);
+          });
         });
       });
     } else {
@@ -110,10 +82,10 @@ exports.createUser = async (request, response) => {
 
 //loginUser
 exports.loginUser = async (request, response) => {
-    const { username, password } = request.body;
-    const selectUserQuery = `SELECT * FROM user WHERE username = ?`;
+    const { email_address, password } = request.body;
+    const selectUserQuery = `SELECT * FROM users WHERE email_address = ?`;
   
-    db.query(selectUserQuery, [username], async (err, rows) => {
+    db.query(selectUserQuery, [email_address], async (err, rows) => {
       if (err) {
         console.error("DB Error:", err.message);
         return response.status(500).send("Database error");
@@ -127,7 +99,7 @@ exports.loginUser = async (request, response) => {
   
         if (isPasswordMatched) {
           const payload = {
-            username: username,
+            email_address: email_address,
           };
           const jwtToken = jwt.sign(payload, "MY_SECRET_TOKEN");
           response.send({ jwtToken });
@@ -142,10 +114,11 @@ exports.loginUser = async (request, response) => {
   //profile
   exports.profile = async (request, response) => {
     try {
-      const { username } = request;
-      const selectUserQuery = `SELECT * FROM user WHERE username = ?`;
+      const { email_address} = request;
+    
+      const selectUserQuery = `SELECT * FROM users WHERE email_address = ?`;
   
-      db.query(selectUserQuery, [username], async (err, rows) => {
+      db.query(selectUserQuery, [email_address], async (err, rows) => {
         if (err) {
           console.error("DB Error:", err.message);
           return response.status(500).send("Database error");
