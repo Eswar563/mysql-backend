@@ -152,10 +152,11 @@ exports.loginUser = async (request, response) => {
   exports.updateProfile = async (request, response) => {
     const { id } = request.params;
     const userDetails = request.body;
-
     const {
-      full_name, email_address,  address,  phone_number, gender
+      full_name, email_address,  address,  phone_number, gender, password
     } = userDetails;
+    const hashedPassword = await bcrypt.hash(password, 10);
+
     const updateUserQuery = `
       UPDATE users
       SET
@@ -164,11 +165,12 @@ exports.loginUser = async (request, response) => {
       address = ?,
       phone_number = ?,
       gender = ?,
+      password = ?,
       updated_at = NOW()
       WHERE
         id = ?;`;
   
-    const values = [full_name, email_address,  address,  phone_number, gender, id];
+    const values = [full_name, email_address,  address,  phone_number, gender, hashedPassword,  id];
   
     db.query(updateUserQuery, values, (error, results) => {
       if (error) {

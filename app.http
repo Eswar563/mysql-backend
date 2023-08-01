@@ -2,7 +2,7 @@ POST http://localhost:3000/register
 Content-Type: application/json
 
 {
-  "full_name": "es222w2ar",
+  "full_name": "eswar",
   "email_address": "eswarvinayvenkatesh26@gmail.com",
   "password": "mysecretpassword",
   "address": "123 Main Street, Cityville, State",
@@ -18,18 +18,18 @@ Content-Type: application/json
 
 {
   "email_address": "eswarvinayvenkatesh26@gmail.com",
-  "password": "mysecretpassword"
+  "password": "1234567"
 }
 
 ###
 
 GET http://localhost:3000/profile
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbF9hZGRyZXNzIjoiZXN3YXJ2aW5heXZlbmthdGVzaDI2QGdtYWlsLmNvbSIsImlhdCI6MTY5MDg3MzcwN30.w9XQo7rbo1kJSzHCgSdnbDxZ_FpqcNSrcnlticU3At4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbF9hZGRyZXNzIjoiZXN3YXJ2aW5heXZlbmthdGVzaDI2QGdtYWlsLmNvbSIsImlhdCI6MTY5MDg4ODUzMX0.d-PrL-NR6RbD6MrAC8ctpwboIPe5BlJlxwgPAt2Rz7Y
 
 ###
 
-PUT http://localhost:3000/updateprofile/14/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbF9hZGRyZXNzIjoiZXN3YXJ2aW5heXZlbmthdGVzaDI2QGdtYWlsLmNvbSIsImlhdCI6MTY5MDg3MzcwN30.w9XQo7rbo1kJSzHCgSdnbDxZ_FpqcNSrcnlticU3At4
+PUT http://localhost:3000/updateprofile/17/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbF9hZGRyZXNzIjoiZXN3YXJ2aW5heXZlbmthdGVzaDI2QGdtYWlsLmNvbSIsImlhdCI6MTY5MDg4ODM5MH0.4v--rp28lKcC2Zx_QFsVUKRgSxbu9oMOsotNBW_E39k
 Content-Type: application/json
 
 {
@@ -38,6 +38,7 @@ Content-Type: application/json
     "email_address": "eswarvinayvenkatesh26@gmail.com",
     "address": "123 Main Street, Cityville, State",
     "phone_number": "555-123-4567",
+    "password":"1234567",
     "gender": "Male"
 
 }
@@ -50,7 +51,7 @@ Content-Type: application/json
 GET http://localhost:3000/users
 
 ###
-GET http://localhost:3000/user/13/
+GET http://localhost:3000/user/14/
 
 ###
 DELETE http://localhost:3000/deleteuser/13/
