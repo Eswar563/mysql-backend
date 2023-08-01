@@ -2,8 +2,8 @@ POST http://localhost:3000/register
 Content-Type: application/json
 
 {
-  "full_name": "es3war",
-  "email_address": "eswarveinayvenaktesh26@gmail.com",
+  "full_name": "es222w2ar",
+  "email_address": "eswarvinayvenkatesh26@gmail.com",
   "password": "mysecretpassword",
   "address": "123 Main Street, Cityville, State",
   "phone_number": "555-123-4567",
@@ -17,30 +17,31 @@ POST http://localhost:3000/login
 Content-Type: application/json
 
 {
-  "email_address": "eswarvinayvenaktesh26@gmail.com",
+  "email_address": "eswarvinayvenkatesh26@gmail.com",
   "password": "mysecretpassword"
 }
 
 ###
 
 GET http://localhost:3000/profile
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbF9hZGRyZXNzIjoiZXN3YXJ2aW5heXZlbmFrdGVzaDI2QGdtYWlsLmNvbSIsImlhdCI6MTY5MDgwNjkzOH0.65L_d0fMkn8NJtcmd4sU2QYy_q8eBryj8ioCcPIFwkA
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbF9hZGRyZXNzIjoiZXN3YXJ2aW5heXZlbmthdGVzaDI2QGdtYWlsLmNvbSIsImlhdCI6MTY5MDg3MzcwN30.w9XQo7rbo1kJSzHCgSdnbDxZ_FpqcNSrcnlticU3At4
 
 ###
 
-PUT http://localhost:3000/updateprofile/46/
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InZlbmthdGVzaDEyMyIsImlhdCI6MTY5MDQ1OTkzNn0.paSWtgc96ylbqzSgAMEkKHqZA72YxeQMM9BysBGaAmY
+PUT http://localhost:3000/updateprofile/14/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbF9hZGRyZXNzIjoiZXN3YXJ2aW5heXZlbmthdGVzaDI2QGdtYWlsLmNvbSIsImlhdCI6MTY5MDg3MzcwN30.w9XQo7rbo1kJSzHCgSdnbDxZ_FpqcNSrcnlticU3At4
 Content-Type: application/json
 
 {
   
-  "username": "123456",
-  "name": "Johnweeeeeerteerty Doe",
-  "password": "123456",
-  "gender": "Matyu",
-  "location": "New rYeeeeeeeeetyuor2k, UrSA"
+    "full_name": "e2swar",
+    "email_address": "eswarvinayvenkatesh26@gmail.com",
+    "address": "123 Main Street, Cityville, State",
+    "phone_number": "555-123-4567",
+    "gender": "Male"
 
 }
+
 
 
 //ADMIN CALLS
@@ -49,10 +50,10 @@ Content-Type: application/json
 GET http://localhost:3000/users
 
 ###
-GET http://localhost:3000/user/20/
+GET http://localhost:3000/user/13/
 
 ###
-DELETE http://localhost:3000/deleteuser/28/
+DELETE http://localhost:3000/deleteuser/13/
 
 ###
 POST http://localhost:3000/adduser

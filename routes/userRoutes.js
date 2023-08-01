@@ -11,5 +11,4 @@ router.put("/updateprofile/:id/",authenticationToken.authenticateToken, userCont
 
 
 
-
 module.exports = router;

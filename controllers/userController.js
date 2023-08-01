@@ -9,6 +9,7 @@ app.use(jsonMiddleware);
 const nodemailer = require("nodemailer");
 const fs = require('fs');
 const { v4: uuidv4 } = require('uuid');
+
 //createUser
 exports.createUser = async (request, response) => {
   const { full_name, email_address, password, address,  phone_number, gender } = request.body;
@@ -81,34 +82,44 @@ exports.createUser = async (request, response) => {
 
 
 //loginUser
+
+
 exports.loginUser = async (request, response) => {
-    const { email_address, password } = request.body;
-    const selectUserQuery = `SELECT * FROM users WHERE email_address = ?`;
-  
-    db.query(selectUserQuery, [email_address], async (err, rows) => {
-      if (err) {
-        console.error("DB Error:", err.message);
-        return response.status(500).send("Database error");
-      }
-  
-      if (rows.length === 0) {
-        response.status(400).send("Invalid User");
-      } else {
-        const dbUser = rows[0];
-        const isPasswordMatched = await bcrypt.compare(password, dbUser.password);
-  
-        if (isPasswordMatched) {
+  const { email_address, password } = request.body;
+  const selectUserQuery = `SELECT * FROM users WHERE email_address = ?`;
+
+  db.query(selectUserQuery, [email_address], async (err, rows) => {
+    if (err) {
+      console.error("DB Error:", err.message);
+      return response.status(500).send("Database error");
+    }
+
+    if (rows.length === 0) {
+      response.status(400).send("Invalid User");
+    } else {
+      const dbUser = rows[0];
+      const isPasswordMatched = await bcrypt.compare(password, dbUser.password);
+
+      if (isPasswordMatched) {
+        const updateLoggedInQuery = `UPDATE users SET last_logged_in = NOW(),isActive = true WHERE email_address = ?`;
+        db.query(updateLoggedInQuery, [email_address], (updateErr, updateResult) => {
+          if (updateErr) {
+            console.error("Error updating last logged in time:", updateErr.message);
+          }
+
           const payload = {
             email_address: email_address,
           };
           const jwtToken = jwt.sign(payload, "MY_SECRET_TOKEN");
           response.send({ jwtToken });
-        } else {
-          response.status(400).send("Invalid Password");
-        }
+        });
+      } else {
+        response.status(400).send("Invalid Password");
       }
-    });
-  };
+    }
+  });
+};
+
 
 
   //profile
@@ -137,30 +148,27 @@ exports.loginUser = async (request, response) => {
     }
   };
   
+  //updateProfile
   exports.updateProfile = async (request, response) => {
     const { id } = request.params;
     const userDetails = request.body;
 
     const {
-      username,
-      name,
-      password,
-      gender,
-      location,
+      full_name, email_address,  address,  phone_number, gender
     } = userDetails;
-    const hashedPassword = await bcrypt.hash(password, 10);
     const updateUserQuery = `
-      UPDATE user
+      UPDATE users
       SET
-        username = ?,
-        name = ?,
-        password = ?,
-        gender = ?,
-        location = ?
+      full_name = ?,
+      email_address = ?,
+      address = ?,
+      phone_number = ?,
+      gender = ?,
+      updated_at = NOW()
       WHERE
         id = ?;`;
   
-    const values = [username, name, hashedPassword, gender, location, id];
+    const values = [full_name, email_address,  address,  phone_number, gender, id];
   
     db.query(updateUserQuery, values, (error, results) => {
       if (error) {
@@ -175,4 +183,5 @@ exports.loginUser = async (request, response) => {
       response.send("User Updated Successfully");
     });
   };
+  
   
