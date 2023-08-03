@@ -2,7 +2,7 @@ POST http://localhost:3000/register
 Content-Type: application/json
 
 {
-  "full_name": "eswar",
+  "full_name": "sujwer33333333333224etyu33e553ay777",
   "email_address": "eswarvinayvenkatesh26@gmail.com",
   "password": "mysecretpassword",
   "address": "123 Main Street, Cityville, State",
@@ -18,7 +18,7 @@ Content-Type: application/json
 
 {
   "email_address": "eswarvinayvenkatesh26@gmail.com",
-  "password": "1234567"
+  "password": "123456789"
 }
 
 ###
@@ -43,12 +43,33 @@ Content-Type: application/json
 
 }
 
+###
+POST http://localhost:3001/forget-password
+Content-Type: application/json
+
+{
+  
+ "email_address":"eswarvinayvenkatesh26@gmail.com"
+
+}
+###
+POST http://localhost:3001/update-password
+Content-Type: application/json
+
+{
+  
+ "email_address":"eswarvinayvenkatesh26@gmail.com",
+ "otp":"346601",
+ "newPassword":"123456789"
+
+}
+###
 
 
 //ADMIN CALLS
 ###
 
-GET http://localhost:3000/users
+GET http://localhost:3001/users
 
 ###
 GET http://localhost:3000/user/14/

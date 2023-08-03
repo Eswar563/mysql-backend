@@ -18,3 +18,7 @@
 
 -- ALTER TABLE users
 -- ADD gender VARCHAR(10);
+-- ALTER TABLE users
+-- ADD otp VARCHAR(6);
+    
+-- ALTER TABLE users ADD otp_expiry TIMESTAMP;
