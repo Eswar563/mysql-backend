@@ -1,134 +1,94 @@
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken")
 const db = require("../db");
 const express = require("express");
 const app = express();
 const jsonMiddleware = express.json();
 app.use(jsonMiddleware);
-const fs = require('fs');
-const { v4: uuidv4 } = require('uuid');
 const {sendEmail} = require("../utilities/utilities")
+const queryUtilities = require("../queryUtilities/queryUtilities")
+const generateJwtToken = require("../generateJwtToken/generateJwtToken")
 
 //createUser
 exports.createUser = async (request, response) => {
-  const { full_name, email_address, password, address, phone_number, gender } = request.body;
-
-  const hashedPassword = await bcrypt.hash(password, 10);
-
-  const selectUserQuery = `SELECT * FROM users WHERE full_name = ?`;
-  db.query(selectUserQuery, [full_name], async (err, rows) => {
-    if (err) {
-      console.error('DB Error:', err.message);
-      return response.status(500).send('Database error');
-    }
-
-    if (rows.length === 0) {
-      const user_id = uuidv4();
-      const createUserQuery = `
-        INSERT INTO 
-          users (user_id, full_name, email_address, password, address,  phone_number, gender) 
-        VALUES 
-          (?, ?, ?, ?, ?, ?, ?)`;
-      db.query(createUserQuery, [user_id, full_name, email_address, hashedPassword, address, phone_number, gender], (err, result) => {
-        if (err) {
-          console.error('DB Error:', err.message);
-          return response.status(500).send('Database error');
-        }
-
-        fs.readFile('emailTemplate.html', 'utf8', async (err, emailTemplate) => {
-          if (err) {
-            console.error('Error reading email template:', err.message);
-            return response.status(500).send('Error reading email template');
-          }
-
-          // Replace placeholders with actual data
-          const emailContent = emailTemplate
-            .replace('{{full_name}}', full_name)
-            .replace('{{phone_number}}', phone_number);
-
-          try {
-            await sendEmail(email_address, 'Welcome to Our Website', emailContent);
-            const newUserId = result.insertId;
-            response.send(`Created new user with ${newUserId}`);
-          } catch (error) {
-            console.error('Error sending email:', error.message);
-            return response.status(500).send('Error sending email');
-          }
-        });
-      });
+  const fields = {
+    user_id: 'user_id',
+    full_name: 'full_name',
+    email_address: 'email_address',
+    password: 'password',
+    address: 'address',
+    phone_number: 'phone_number',
+    gender: 'gender',
+    is_admin: 'is_admin'
+  };
+  const { full_name, email_address, password, address, phone_number, gender, is_admin } = request.body;
+  try {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const rows = await queryUtilities.findUserByName("users", "full_name", full_name);
+    console.log(rows)
+    if (!rows) {
+      const userData = {
+        full_name,
+        email_address,
+        hashedPassword,
+        address,
+        phone_number,
+        gender,
+        is_admin
+      };
+      const newUserId = await queryUtilities.createUserInDB("users", fields, userData);
+      await queryUtilities.sendWelcomeEmail(email_address, full_name, phone_number);
+      response.send(`Created new user with ${newUserId}`);
     } else {
       response.status(400).send('User already exists');
     }
-  });
+  } catch (error) {
+    console.error('Error:', error);
+    response.status(500).send('Internal Server Error');
+  }
 };
-
 
 //loginUser
-
-
 exports.loginUser = async (request, response) => {
   const { email_address, password } = request.body;
-  const selectUserQuery = `SELECT * FROM users WHERE email_address = ?`;
-
-  db.query(selectUserQuery, [email_address], async (err, rows) => {
-    if (err) {
-      console.error("DB Error:", err.message);
-      return response.status(500).send("Database error");
+  try {
+    const dbUser = await queryUtilities.findUserByName("users", "email_address", email_address);
+    if (!dbUser) {
+      return response.status(400).send("Invalid User");
     }
-
-    if (rows.length === 0) {
-      response.status(400).send("Invalid User");
+    const isPasswordMatched = await bcrypt.compare(password, dbUser.password);
+    if (isPasswordMatched) {
+      await queryUtilities.updateLoggedInStatus(email_address);
+      const payload = {
+        email_address: email_address,
+      };
+      console.log('>>>>>>>>>>>',payload)
+      const jwtToken = generateJwtToken.generateJwtToken(payload, "MY_SECRET_TOKEN");
+      response.send({ jwtToken });
     } else {
-      const dbUser = rows[0];
-      const isPasswordMatched = await bcrypt.compare(password, dbUser.password);
-
-      if (isPasswordMatched) {
-        const updateLoggedInQuery = `UPDATE users SET last_logged_in = NOW(),isActive = true WHERE email_address = ?`;
-        db.query(updateLoggedInQuery, [email_address], (updateErr, updateResult) => {
-          if (updateErr) {
-            console.error("Error updating last logged in time:", updateErr.message);
-          }
-
-          const payload = {
-            email_address: email_address,
-          };
-          const jwtToken = jwt.sign(payload, "MY_SECRET_TOKEN");
-          response.send({ jwtToken });
-        });
-      } else {
-        response.status(400).send("Invalid Password");
-      }
+      response.status(400).send("Invalid Password");
     }
-  });
+  } catch (error) {
+    console.error("DB Error:", error.message);
+    response.status(500).send("Database error");
+  }
 };
 
+//profile
+exports.profile = async (request, response) => {
+  try {
+    const { email_address } = request;
 
+    const userDetails = await queryUtilities.findUserByName("users", "email_address", email_address);
 
-  //profile
-  exports.profile = async (request, response) => {
-    try {
-      const { email_address} = request;
-    
-      const selectUserQuery = `SELECT * FROM users WHERE email_address = ?`;
-  
-      db.query(selectUserQuery, [email_address], async (err, rows) => {
-        if (err) {
-          console.error("DB Error:", err.message);
-          return response.status(500).send("Database error");
-        }
-  
-        if (rows.length === 0) {
-          response.status(404).send("User not found");
-        } else {
-          const userDetails = rows[0];
-          response.send(userDetails);
-        }
-      });
-    } catch (error) {
-      console.error("Error:", error.message);
-      response.status(500).send("Internal server error");
+    if (!userDetails) {
+      return response.status(404).send("User not found");
     }
-  };
+    response.send(userDetails);
+  } catch (error) {
+    console.error("Error:", error.message);
+    response.status(500).send("Internal server error");
+  }
+};
   
   //updateProfile
   exports.updateProfile = async (request, response) => {
@@ -168,6 +128,8 @@ exports.loginUser = async (request, response) => {
     });
   };
   
+  //forgotPassword
+
   function generateOTP() {
     return Math.floor(100000 + Math.random() * 900000).toString();
   }
@@ -214,7 +176,7 @@ exports.loginUser = async (request, response) => {
     });
   };
 
-
+  //updatePassword
   exports.updatePassword = async (req, res) => {
     const { email_address, otp, newPassword } = req.body;
     const hashedPassword = await bcrypt.hash(newPassword, 10);

@@ -1,13 +1,15 @@
+//user calls
 POST http://localhost:3000/register
 Content-Type: application/json
 
 {
-  "full_name": "sujwer33333333333224etyu33e553ay777",
+  "full_name": "eswar",
   "email_address": "eswarvinayvenkatesh26@gmail.com",
-  "password": "mysecretpassword",
+  "password": "123456789",
   "address": "123 Main Street, Cityville, State",
   "phone_number": "555-123-4567",
-  "gender": "Male"
+  "gender": "Male",
+  "is_admin": false
 }
 
 
@@ -18,13 +20,13 @@ Content-Type: application/json
 
 {
   "email_address": "eswarvinayvenkatesh26@gmail.com",
-  "password": "123456789"
+  "password": "mysecretpassword"
 }
 
 ###
 
 GET http://localhost:3000/profile
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbF9hZGRyZXNzIjoiZXN3YXJ2aW5heXZlbmthdGVzaDI2QGdtYWlsLmNvbSIsImlhdCI6MTY5MDg4ODUzMX0.d-PrL-NR6RbD6MrAC8ctpwboIPe5BlJlxwgPAt2Rz7Y
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbF9hZGRyZXNzIjoiZXN3YXIyNkBnbWFpbC5jb20iLCJpc19hZG1pbiI6MSwiaWF0IjoxNjkxMzU4MDUzfQ.I5B3rFKScdFgDvDVvghkmIoka1SQ8pb5NyRogyEwKHw
 
 ###
 
@@ -44,7 +46,7 @@ Content-Type: application/json
 }
 
 ###
-POST http://localhost:3001/forget-password
+POST http://localhost:3000/forget-password
 Content-Type: application/json
 
 {
@@ -53,58 +55,151 @@ Content-Type: application/json
 
 }
 ###
-POST http://localhost:3001/update-password
+POST http://localhost:3000/update-password
 Content-Type: application/json
 
 {
   
  "email_address":"eswarvinayvenkatesh26@gmail.com",
- "otp":"346601",
+ "otp":"622767",
  "newPassword":"123456789"
 
 }
 ###
 
 
-//ADMIN CALLS
+
+
+//blog calls
+
+POST http://localhost:3000/createblog
+Content-Type: application/json
+
+{
+
+  "title": "Sample Post",
+  "summary": "This is a sample post summary.",
+  "cover": "https://example.com/sample-cover.jpg",
+  "published": true,
+  "author": "John Doe",
+  "category": "Technology",
+  "content": "This is the content of the sample post.",
+  "post_slug": "sample-post"
+  
+}
+
+
+
+###
+PUT http://localhost:3000/updateblog/6/
+Content-Type: application/json
+
+{
+
+  "title": "Sample Post",
+  "summary": "This is a sample post summary.",
+  "cover": "https://example.com/sample-cover.jpg",
+  "published": true,
+  "author": "John Doe",
+  "category": "Technology",
+  "content": "This is the content of the sample post.",
+  "post_slug": "sample-post"
+  
+}
+
 ###
 
-GET http://localhost:3001/users
+GET http://localhost:3000/getAllBlogs/
 
 ###
-GET http://localhost:3000/user/14/
+GET http://localhost:3000/getAllBlogs/4
+
+###
+DELETE http://localhost:3000/deleteblog/3/
+
+###
+DELETE http://localhost:3000/deleteAllBlogs
+
+###
+
+
+
+//admin calls
+POST http://localhost:3000/createAdmin
+Content-Type: application/json
+
+{
+  "full_name": "admin2",
+  "email_address": "eswar26@gmail.com",
+  "password": "admin",
+  "address": "123 Main Street, Cityville, State",
+  "phone_number": "555-123-4567",
+  "gender": "Male",
+  "is_admin": true
+}
+
+###
+POST http://localhost:3000/adminLogin
+Content-Type: application/json
+
+{
+  "email_address": "eswar26@gmail.com",
+  "password": "admin"
+}
+
+###
+
+POST http://localhost:3000/adduser
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbF9hZGRyZXNzIjoiZXN3YXIyNkBnbWFpbC5jb20iLCJpc19hZG1pbiI6MSwiaWF0IjoxNjkxMzU4MDUzfQ.I5B3rFKScdFgDvDVvghkmIoka1SQ8pb5NyRogyEwKHw
+
+{
+  
+  "full_name": "eswr6efe3e3eeewrree4e5ayeeeer3re",
+  "email_address": "eswarvinayvenkatesh26@gmail.com",
+  "password": "mysecretpassword",
+  "address": "123 Main Street, Cityville, State",
+  "phone_number": "555-123-4567",
+  "gender": "Male"
+
+}
+
+###
+PUT http://localhost:3000/updateuser/61/
+Content-Type: application/json
+
+{
+  
+  "username": "joh33444n",
+  "name": "Johnweeeeeerteerty Doe",
+  "password": "sec3ureer",
+  "gender": "Matyu",
+  "location": "New rYeeeeeeeeetyuor2k, UrSA"
+
+}
+
+###
+
+GET http://localhost:3000/users
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbF9hZGRyZXNzIjoiZXN3YXIyNkBnbWFpbC5jb20iLCJpc19hZG1pbiI6MSwiaWF0IjoxNjkxMzU2OTMwfQ.7fj4MmljE3u1fNn0RC9zdxaYuJdzGHoqFUhYvCW4CEA
+
+
+###
+GET http://localhost:3000/user/61/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbF9hZGRyZXNzIjoiZXN3YXIyNkBnbWFpbC5jb20iLCJpc19hZG1pbiI6MSwiaWF0IjoxNjkxMzU2OTMwfQ.7fj4MmljE3u1fNn0RC9zdxaYuJdzGHoqFUhYvCW4CEA
+
+
 
 ###
 DELETE http://localhost:3000/deleteuser/13/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbF9hZGRyZXNzIjoiZXN3YXIyNkBnbWFpbC5jb20iLCJpc19hZG1pbiI6MSwiaWF0IjoxNjkxMzU2OTMwfQ.7fj4MmljE3u1fNn0RC9zdxaYuJdzGHoqFUhYvCW4CEA
+
 
 ###
-POST http://localhost:3000/adduser
-Content-Type: application/json
-
-{
-  
-  "username": "joh33444n",
-  "name": "Johnweeeeeerteerty Doe",
-  "password": "sec3ureer",
-  "gender": "Matyu",
-  "location": "New rYeeeeeeeeetyuor2k, UrSA"
-
-}
-
-###
-PUT http://localhost:3000/updateuser/41/
-Content-Type: application/json
-
-{
-  
-  "username": "joh33444n",
-  "name": "Johnweeeeeerteerty Doe",
-  "password": "sec3ureer",
-  "gender": "Matyu",
-  "location": "New rYeeeeeeeeetyuor2k, UrSA"
-
-}
-
-###
-
 DELETE http://localhost:3000/deleteAllUsers
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbF9hZGRyZXNzIjoiZXN3YXIyNkBnbWFpbC5jb20iLCJpc19hZG1pbiI6MSwiaWF0IjoxNjkxMzU2OTMwfQ.7fj4MmljE3u1fNn0RC9zdxaYuJdzGHoqFUhYvCW4CEA
+
+
+
+
+

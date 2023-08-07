@@ -5,10 +5,11 @@ const cors = require("cors")
 app.use(cors())
 const userRoutes = require("./routes/userRoutes");
 const adminRoutes = require("./routes/adminRoutes");
+const blogRoutes = require("./routes/blogRoutes")
 
 
 app.use(express.json());
-app.use("/", userRoutes, adminRoutes);
+app.use("/", userRoutes, adminRoutes, blogRoutes);
 
 const initializeDBAndServer = () => {
   db.connect((err) => {
